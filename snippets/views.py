@@ -8,6 +8,18 @@ from .models import Snippet
 from .serializers import SnippetSerializer, UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
+from rest_framework import renderers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+@api_view(('GET',))
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('user-list', request=request, format=format),
+        'snippets': reverse('snippet-list', request=request, format=format)
+    })
+
 
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
@@ -27,6 +39,15 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
         obj.owner = self.request.user
 
 
+class SnippetHighlight(generics.GenericAPIView):
+    queryset = Snippet.objects.all()
+    renderer_classes = (renderers.StaticHTMLRenderer,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+    def get(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
+
 
 # ReadOnly views
 # We'd like to just use read-only views for the user representations,
@@ -35,6 +56,7 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # note permissions are not defined for this view, it will get the DEFAULT_PERMISSION_CLASSES defined in settings
 
 
 class UserDetail(generics.RetrieveAPIView):

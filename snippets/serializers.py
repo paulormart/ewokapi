@@ -5,9 +5,30 @@ from rest_framework import serializers
 
 from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
+# ex.3 Using hyperlinks between Entities
+# http://www.django-rest-framework.org/tutorial/5-relationships-and-hyperlinked-apis
+
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.Field(source='owner.username')
+    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+
+    class Meta:
+        model = Snippet
+        fields = ('url', 'highlight', 'owner',
+                  'title', 'code', 'linenos', 'language', 'style')
 
 
-class SnippetSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail')
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'snippets')
+
+
+# ex.2 Using primary keys between Entities
+
+class SnippetSerializer_2(serializers.ModelSerializer):
     """
     SnippetSerializer
     using ModelSerializer like ModelForm
@@ -19,7 +40,7 @@ class SnippetSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'code', 'linenos', 'language', 'style', 'owner')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer_2(serializers.ModelSerializer):
 
     snippets = serializers.PrimaryKeyRelatedField(many=True)
 
@@ -32,7 +53,9 @@ class UserSerializer(serializers.ModelSerializer):
         # so we needed to add an explicit field for it.
 
 
-class SnippetSerializer_refactored(serializers.Serializer):
+# ex1. Simple Serializer
+
+class SnippetSerializer_1(serializers.Serializer):
     """
     SnippetSerializer_refactored
     was the first aproach at http://www.django-rest-framework.org/tutorial/1-serialization

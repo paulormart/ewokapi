@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="{% static 'lib/bootstrap-3.1.1/css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+
+    <div id="snippets">
+        <form id="addSnippet" action="#">
+            <div>
+            hello
+            </div>
+        </form>
+    </div>
+
+
+{# dependecies #}
+<script src="{% static 'lib/jquery.1.11.1.js' %}"></script>
+<script src="{% static 'lib/underscore.1.6.0.js' %}"></script>
+<script src="{% static 'lib/backbone.1.1.2.js' %}"></script>
+<script src="{% static 'lib/bootstrap-3.1.1/js/bootstrap.js' %}"></script>
+
+{# app #}
+<script src="{% static 'js/models/snippet.js' %}"></script>
+<script src="{% static 'js/collections/snippets.js' %}"></script>
+<script src="{% static 'js/views/snippet.js' %}"></script>
+<script src="{% static 'js/views/snippets.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+
+</body>
+</html>

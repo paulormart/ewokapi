@@ -80,13 +80,30 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-STATIC_URL = '/static/'
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10
+    'PAGINATE_BY': 2
 }
+
+# ============
+# PATHS Configuration
+# ============
+
+from unipath import Path
+# PROJECT_DIR = ../moon_project
+PROJECT_DIR = Path(__file__).ancestor(2)
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = PROJECT_DIR.child('media')
+
+STATIC_URL = '/static/'
+#STATIC_URL = 'http://storage.googleapis.com/%s/%s/' % (os.getenv('GOOGLE_CLOUD_STORAGE_BUCKET_NAME_STATIC'), 'assets')
+
+STATICFILES_DIRS = (
+    PROJECT_DIR.child('assets'),
+)
+
+TEMPLATE_DIRS = (
+    PROJECT_DIR.child('templates'),
+)
