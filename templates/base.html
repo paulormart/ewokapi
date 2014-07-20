@@ -10,20 +10,87 @@
     {% block content %}
     {% endblock %}
 
-    <div id="snippets">
-        <form id="addSnippet" action="#">
-            <div>
-            hello
+    <div class="col-xs-4"></div>
+
+        <div class="col-xs-4">
+            <div id="snippets" class="panel-body">
+                <form role="form" id="addSnippet" action="#">
+                    <div class="form-group">
+                        <label for="owner">Owner</label>
+                        <input type="email" class="form-control" id="owner" placeholder="Owner">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="code">Code</label>
+                        <input type="text" class="form-control" id="code" placeholder="Code">
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Check me out
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <input type="text" class="form-control" id="linenos" placeholder="Language">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="highlighted">Highlighted</label>
+                        <input type="text" class="form-control" id="highlighted" placeholder="Highlighted">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="style">Language</label>
+                        <input type="text" class="form-control" id="style" placeholder="Style">
+                    </div>
+
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
             </div>
-        </form>
-    </div>
+
+            <script id="snippetTemplate" type="text/template">
+
+                {% verbatim snippet %}
+
+                    <ul>
+                        <li><%= owner %></li>
+                        <li><%= title %></li>
+                        <li><%= code %></li>
+                        <li><%= linenos %></li>
+                        <li><%= language %></li>
+                        <li><%= highlighted %></li>
+                        <li><%= style %></li>
+
+                    </ul>
+
+                    <button class="delete">Delete</button>
+                {% endverbatim snippet %}
+
+            </script>
+
+        </div>
 
 
 {# dependecies #}
+    {% comment %}
 <script src="{% static 'lib/jquery.1.11.1.js' %}"></script>
+    {% endcomment %}
+    <script src="{% static 'lib/jquery.js' %}"></script>
+    <script src="{% static 'lib/bootstrap-3.1.1/js/bootstrap.js' %}"></script>
+{% comment %}
 <script src="{% static 'lib/underscore.1.6.0.js' %}"></script>
+
+
 <script src="{% static 'lib/backbone.1.1.2.js' %}"></script>
-<script src="{% static 'lib/bootstrap-3.1.1/js/bootstrap.js' %}"></script>
+    {% endcomment %}
+
+    <script src="{% static 'lib/underscore.js' %}"></script>
+    <script src="{% static 'lib/backbone.js' %}"></script>
 
 {# app #}
 <script src="{% static 'js/models/snippet.js' %}"></script>
