@@ -22,6 +22,25 @@ app.SnippetsView = Backbone.View.extend({
             model: item
         });
         this.$el.append(snippetView.render().el);
+    },
+
+    events:{
+        'click #add':'addSnippet'
+    },
+
+    addSnippet: function( e ) {
+        e.preventDefault();
+
+        var formData = {};
+
+        $( '#addSnippet div' ).children( 'input' ).each( function( i, el ) {
+            if( $( el ).val() != '' )
+            {
+                formData[ el.id ] = $( el ).val();
+            }
+        });
+
+        this.collection.add( new app.Snippet( formData ) );
     }
 
 });
