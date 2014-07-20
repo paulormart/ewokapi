@@ -1,7 +1,7 @@
 
 var app = app || {};
 
-app.SnippetsView = Backbone.View.extends({
+app.SnippetsView = Backbone.View.extend({
     el: '#snippets',
 
     initialize: function(initialSnippets){
