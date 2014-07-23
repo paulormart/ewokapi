@@ -7,6 +7,11 @@ app.SnippetsView = Backbone.View.extend({
     initialize: function(initialSnippets){
         this.collection = new app.Snippets(initialSnippets);
         this.render();
+
+        // Initialize the event listener
+        this.listenTo(this.collection, 'add', this.renderSnippet());
+
+
     },
 
     // render snippets by render each snippet in its collection
@@ -24,11 +29,14 @@ app.SnippetsView = Backbone.View.extend({
         this.$el.append(snippetView.render().el);
     },
 
+    // Events
+
     events:{
         'click #add':'addSnippet'
     },
 
     addSnippet: function( e ) {
+
         e.preventDefault();
 
         var formData = {};
