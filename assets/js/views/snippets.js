@@ -7,10 +7,22 @@ app.SnippetsView = Backbone.View.extend({
 
     initialize: function(initialSnippets){
         this.collection = new app.Snippets(initialSnippets);
+        // > api backend, to get the app to retrieve the models at page load
+        this.collection.fetch({reset: true}),
+        // The Backbone documentation recommends inserting all models when the page is generated
+        // on the server side, rather than fetching them from the client side once the page is loaded.
+        // Since this chapter is trying to give you a more complete picture of how to communicate with
+        // a server, we will go ahead and ignore that recommendation.
         this.render();
 
         // Initialize the event listener
         this.listenTo(this.collection, 'add', this.renderSnippet );
+
+        // > We need to do this since the models are fetched asynchronously after the page is rendered.
+        // When the fetch completes, Backbone fires the reset event, as requested by the reset: true option,
+        // and our listener re-renders the view.
+        this.listenTo(this.collection, 'reset', this.render);
+
 
     },
 
@@ -33,7 +45,17 @@ app.SnippetsView = Backbone.View.extend({
             }
         });
 
-        this.collection.add( new app.Snippet( formData ) );
+        //this.collection.add( new app.Snippet( formData ) );
+
+        formData = [{
+    "owner": "dev",
+    "title": "Pauloe",
+    "code": "def hello(self):\r\n    return \"hello\"",
+    "linenos": false,
+    "language": "Clipper",
+    "style": "autumn"
+}]
+        this.collection.add( formData ); // to get the snippets persisted in db
     },
 
 

@@ -3,6 +3,7 @@ var app = app || {};
 
 $(function(){
 
+    /*
     var snippets = [
         {
             "url": "http://localhost:8000/api/snippets/1/",
@@ -28,6 +29,32 @@ $(function(){
     ];
 
     console.log(snippets)
+    */
+
+
+    // ===========
+    // Ajax Setup
+    // https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#ajax
+    // ===========
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    // ===========
+    // http://plugins.jquery.com/cookie/
+    var csrftoken = $.cookie('csrftoken');
+    // ===========
+
+
+
+
 
     new app.SnippetsView(snippets);
 

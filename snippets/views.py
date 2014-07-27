@@ -1,17 +1,19 @@
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth.models import User
 
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import renderers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 from .models import Snippet
 from .serializers import SnippetSerializer, UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
-from rest_framework import renderers
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
 @api_view(('GET',))
 def api_root(request, format=None):
@@ -26,6 +28,10 @@ class SnippetList(generics.ListCreateAPIView):
     serializer_class = SnippetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
+    #@method_decorator(requires_csrf_token)
+    #def dispatch(self, *args, **kwargs):
+    #    return super(SnippetList, self).dispatch(*args, **kwargs)
+
     def pre_save(self, obj):
         obj.owner = self.request.user
 
@@ -34,6 +40,11 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+
+
+    #@method_decorator(requires_csrf_token)
+    #def dispatch(self, request, *args, **kwargs):
+    #    return super(SnippetDetail, self).dispatch(*args, **kwargs)
 
     def pre_save(self, obj):
         obj.owner = self.request.user
