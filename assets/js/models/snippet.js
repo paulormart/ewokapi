@@ -1,23 +1,37 @@
 
-var app = app || {};
+define([
+    'underscore',
+    'backbone'
+    ],
+    function(_, Backbone) {
 
-app.Snippet = Backbone.Model.extend({
+        'use strict';
 
-    /*
-    defaults:{
-        owner:  'me',
-        title:  'First snippet',
-        code:   '<\\>',
-        lineos: '1',
-        language:   'English',
-        highlight:    '1',
-        style:  'normal'
-    },*/
+        var Snippet = Backbone.Model.extend({
 
-    parse: function( response ) {
-        //response.id = response._id;
-        //response.id = response.url;
-        return response;
-    }
 
+            /*defaults:{
+                owner:  'me',
+                title:  'First snippet',
+                code:   '<\\>',
+                linenos: '1',
+                language:   'English',
+                highlight:    '1',
+                style:  'normal'
+            },*/
+
+            initialize: function(){},
+
+            parse: function( response ) {
+                //response.id = response._id;
+                //response.id = response.url;
+                return response;
+            }
+
+        });
+
+        return Snippet;
 });
+
+
+

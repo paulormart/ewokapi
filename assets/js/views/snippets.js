@@ -1,85 +1,121 @@
 
-var app = app || {};
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'collections/snippets',
+    'views/snippet',
+    'text!templates/snippet_stats.html'
+    ],
+    function($, _, Backbone, SnippetsCollection, SnippetView, statsTemplate){
 
-app.SnippetsView = Backbone.View.extend({
+        'use strict';
 
-    el: '#snippets',
+        var SnippetsView = Backbone.View.extend({
 
-    // Events
-    events: {
-        'click #add':'addSnippet'
-    },
+            el: '#snippets',
 
+            template: _.template(statsTemplate),
 
-    initialize: function(initialSnippets){
-        this.collection = new app.Snippets(initialSnippets);
-
-        // > api backend, to get the app to retrieve the models at page load
-        this.collection.fetch({reset: true}),
-
-
-
-
-        // The Backbone documentation recommends inserting all models when the page is generated
-        // on the server side, rather than fetching them from the client side once the page is loaded.
-        // Since this chapter is trying to give you a more complete picture of how to communicate with
-        // a server, we will go ahead and ignore that recommendation.
-        this.render();
-
-        // Initialize the event listener
-        this.listenTo(this.collection, 'add', this.renderSnippet );
-
-        // > We need to do this since the models are fetched asynchronously after the page is rendered.
-        // When the fetch completes, Backbone fires the reset event, as requested by the reset: true option,
-        // and our listener re-renders the view.
-        this.listenTo(this.collection, 'reset', this.render);
+            // Events
+            events: {
+                'click #add': 'createSnippet'
+            },
 
 
-    },
+            initialize: function(){
+
+                this.$main = this.$('#main');
+                this.$snippetList = this.$('#snippet-list');
+                this.$snippetStats = this.$('#snippet-stats');
 
 
 
-    // Functions
-    addSnippet: function( e ) {
+                this.listenTo(SnippetsCollection, 'add', this.addOne );
+                this.listenTo(SnippetsCollection, 'reset', this.addAll);
 
-        e.preventDefault();
 
-        var formData = {};
+                this.listenTo(SnippetsCollection, 'all', this.render);
 
-        $( '#addSnippet div' ).children( 'input' ).each( function( i, el ) {
-            if( $( el ).val() != '' )
-            {
-                formData[ el.id ] = $( el ).val();
-                // Clear input field value
-                $( el ).val('');
+                SnippetsCollection.fetch({reset: true});
+
+            },
+
+            // render just means refreshing the statistics
+            render: function(){
+
+                var available = SnippetsCollection.available().length;
+                var remaining = SnippetsCollection.remaining().length;
+
+                if (SnippetsCollection.length)
+                {
+                    this.$main.show();
+                    this.$snippetStats.show();
+
+                    this.$snippetStats.html(this.template({
+                        available: available,
+                        remaining: remaining
+                    }));
+
+                }else
+                {
+                    this.$main.hide();
+                    this.$snippetStats.hide();
+                }
+
+            },
+
+            // add a single snippet by creating a view for it and appending its element to the selected tag
+            addOne: function (snippet) {
+                var view = new SnippetView({ model: snippet});
+                this.$snippetList.append(view.render().el);
+            },
+
+            // add All items in the collection at once
+            addAll: function(){
+                this.$snippetList.empty();
+                SnippetsCollection.each(this.addOne, this);
+            },
+
+            filterOne: function(snippet){
+                snippet.trigger('visible');
+            },
+
+            filterAll: function(){
+                SnippetsCollection.each(this.filterOne, this);
+            },
+
+            // Helper Functions
+            newAttributes: function() {
+
+                var formData = {};
+
+                $( '#addSnippet div' ).children( 'input' ).each( function( i, el ) {
+                    if( $( el ).val() != '' )
+                    {
+                        formData[ el.id ] = $( el ).val();
+                        // Clear input field value
+                        $( el ).val('');
+                    }
+                });
+
+                return formData;
+
+            },
+
+            // Event Functions
+            createSnippet: function(e){
+
+                e.preventDefault();
+
+                SnippetsCollection.create(this.newAttributes());
+
             }
+
+            // TODOS clearCompleted
+
         });
 
-        //this.collection.add( new app.Snippet( formData ) );
-
-        this.collection.create( formData ); // to get the snippets persisted in db
-
-    },
-
-
-
-    // render snippets by render each snippet in its collection
-    render: function(){
-        this.collection.each(function(item){
-            this.renderSnippet(item);
-        }, this);
-    },
-
-    // render a snippet by creating a snippetView and appending the element it renders to the snippet's element
-    renderSnippet: function(item){
-        var snippetView = new app.SnippetView({
-            model: item
-        });
-        this.$el.append(snippetView.render().el);
-    }
-
-
-
-
+        return SnippetsView;
 
 });

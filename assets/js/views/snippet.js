@@ -1,32 +1,42 @@
 
-var app = app || {};
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'text!templates/snippet_detail.html'],
+    function($, _, Backbone, snippetTemplate){
 
-app.SnippetView = Backbone.View.extend({
-    tagName: 'div',
-    className: 'snippetContainer',
-    template: _.template($('#snippetTemplate').html()), // this is the snippetTemplate id from the script tag, which willl be replaced
+        'use strict';
 
+        var SnippetView = Backbone.View.extend({
+            tagName: 'div',
+            className: 'snippetContainer',
+            template: _.template(snippetTemplate),
 
-    // Events
-    events: {
-        'click .delete':'deleteSnippet'
-    },
+            // DOM events
+            events: {
+                'click .remove':'removeSnippet'
+            },
 
-    deleteSnippet: function(){
+            initialize: function(){
+                this.listenTo(this.model, 'change', this.render);
+                this.listenTo(this.model, 'destroy', this.remove);
+            },
 
-        // Delete model
-        this.model.destroy();
+            render: function(){
 
-        //Delete view
-        this.remove();
-    },
+                this.$el.html(this.template(this.model.attributes));
+                return this;
 
-    render: function(){
+            },
 
-        this.$el.html(this.template(this.model.attributes)); // this.$el is what we have just defined in the tagName above
+            removeSnippet: function(){
+                // Delete model
+                this.model.destroy();
 
-        return this;
+            }
 
-    }
+        });
 
-});
+        return SnippetView;
+    });
