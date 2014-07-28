@@ -1,7 +1,14 @@
 
+
 var app = app || {};
 
+
+
 $(function(){
+
+    _.templateSettings = {
+        interpolate: /\{\{(.+?)\}\}/g
+    };
 
     /*
     var snippets = [
@@ -56,7 +63,7 @@ $(function(){
 
 
 
-    new app.SnippetsView(snippets);
+    new app.SnippetsView();
 
 
 });

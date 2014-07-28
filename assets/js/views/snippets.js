@@ -5,10 +5,21 @@ app.SnippetsView = Backbone.View.extend({
 
     el: '#snippets',
 
+    // Events
+    events: {
+        'click #add':'addSnippet'
+    },
+
+
     initialize: function(initialSnippets){
         this.collection = new app.Snippets(initialSnippets);
+
         // > api backend, to get the app to retrieve the models at page load
         this.collection.fetch({reset: true}),
+
+
+
+
         // The Backbone documentation recommends inserting all models when the page is generated
         // on the server side, rather than fetching them from the client side once the page is loaded.
         // Since this chapter is trying to give you a more complete picture of how to communicate with
@@ -26,10 +37,7 @@ app.SnippetsView = Backbone.View.extend({
 
     },
 
-    // Events
-    events: {
-        'click #add':'addSnippet'
-    },
+
 
     // Functions
     addSnippet: function( e ) {
@@ -42,20 +50,15 @@ app.SnippetsView = Backbone.View.extend({
             if( $( el ).val() != '' )
             {
                 formData[ el.id ] = $( el ).val();
+                // Clear input field value
+                $( el ).val('');
             }
         });
 
         //this.collection.add( new app.Snippet( formData ) );
 
-        formData = [{
-    "owner": "dev",
-    "title": "Pauloe",
-    "code": "def hello(self):\r\n    return \"hello\"",
-    "linenos": false,
-    "language": "Clipper",
-    "style": "autumn"
-}]
-        this.collection.add( formData ); // to get the snippets persisted in db
+        this.collection.create( formData ); // to get the snippets persisted in db
+
     },
 
 
