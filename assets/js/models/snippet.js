@@ -9,23 +9,28 @@ define([
 
         var Snippet = Backbone.Model.extend({
 
-
             /*defaults:{
-                owner:  'me',
+                owner:  'dev',
                 title:  'First snippet',
                 code:   '<\\>',
-                linenos: '1',
+                linenos: true,
                 language:   'English',
                 highlight:    '1',
                 style:  'normal'
-            },*/
-
+            },
+            */
             initialize: function(){},
 
             parse: function( response ) {
                 //response.id = response._id;
-                //response.id = response.url;
                 return response;
+            },
+
+            // Toggle the `linenos` state of this snippet item.
+            toggle: function () {
+                this.save({
+                    linenos: !this.get('linenos')
+                });
             }
 
         });

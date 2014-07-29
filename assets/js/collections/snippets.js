@@ -12,12 +12,10 @@ define([
         var SnippetsCollection = Backbone.Collection.extend({
 
             model: Snippet,
+            url: '/api/snippets/',
 
-            // > api backend
-            // url: '/api/snippets/',
-
-            // testing filters
-            available: function(){
+            // Filters
+            completed: function(){
                 return this.where({linenos : true})
             },
             remaining: function(){
@@ -26,9 +24,14 @@ define([
 
             // Server response
             parse: function(response) {
-                // by default response is returned, but you can manipulate the response here.
-                //return response.results;
-                return response;
+
+                // Paginator
+                this.totalRecords = response.count;
+                this.nextPage = response.next;
+                this.previousPage = response.previous;
+
+                return response.results;
+
                 //return [{"content":"Hi there","id":1},{"content":"How are you?","id":2}];
             }
 

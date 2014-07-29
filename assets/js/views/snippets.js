@@ -5,15 +5,16 @@ define([
     'backbone',
     'collections/snippets',
     'views/snippet',
-    'text!templates/snippet_stats.html'
+    'text!templates/snippet_stats.html',
+    'common'
     ],
-    function($, _, Backbone, SnippetsCollection, SnippetView, statsTemplate){
+    function($, _, Backbone, SnippetsCollection, SnippetView, statsTemplate, Common){
 
         'use strict';
 
         var SnippetsView = Backbone.View.extend({
 
-            el: '#snippets',
+            el: '#snippet-app',
 
             template: _.template(statsTemplate),
 
@@ -29,12 +30,10 @@ define([
                 this.$snippetList = this.$('#snippet-list');
                 this.$snippetStats = this.$('#snippet-stats');
 
-
-
                 this.listenTo(SnippetsCollection, 'add', this.addOne );
                 this.listenTo(SnippetsCollection, 'reset', this.addAll);
-
-
+                this.listenTo(SnippetsCollection, 'change:completed', this.filterOne);
+                this.listenTo(SnippetsCollection, 'filter', this.filterAll);
                 this.listenTo(SnippetsCollection, 'all', this.render);
 
                 SnippetsCollection.fetch({reset: true});
@@ -44,7 +43,7 @@ define([
             // render just means refreshing the statistics
             render: function(){
 
-                var available = SnippetsCollection.available().length;
+                var completed = SnippetsCollection.completed().length;
                 var remaining = SnippetsCollection.remaining().length;
 
                 if (SnippetsCollection.length)
@@ -53,9 +52,14 @@ define([
                     this.$snippetStats.show();
 
                     this.$snippetStats.html(this.template({
-                        available: available,
+                        completed: completed,
                         remaining: remaining
                     }));
+
+                    this.$('#filters li a')
+                        .removeClass('selected')
+                        .filter('[href="#/' + (Common.SnippetFilter || '') + '"]')
+                        .addClass('selected');
 
                 }else
                 {
@@ -91,7 +95,13 @@ define([
                 var formData = {};
 
                 $( '#addSnippet div' ).children( 'input' ).each( function( i, el ) {
-                    if( $( el ).val() != '' )
+
+                    if ($(el).attr('type')==='checkbox')
+                    {
+                        formData[ el.id ] = $(el).is(':checked');
+                        $( el ).prop('checked', false);
+                    }
+                    else if( $( el ).val() != '' )
                     {
                         formData[ el.id ] = $( el ).val();
                         // Clear input field value

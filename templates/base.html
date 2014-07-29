@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="{% static 'js/lib/bootstrap/css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+    <link href="{% static 'css/base.css' %}" rel='stylesheet' type='text/css' />
 </head>
 <body>
     {% block content %}
@@ -13,7 +14,8 @@
     <div class="col-xs-4"></div>
 
         <div class="col-xs-4">
-            <section id="snippetapp" class="panel-body">
+
+            <section id="snippet-app" class="panel-body">
                 <section id="main">
                     <form role="form" id="addSnippet" action="#">
                         {% csrf_token %}
@@ -24,12 +26,6 @@
                         <div class="form-group">
                             <label for="code">Code</label>
                             <input type="text" class="form-control" id="code" placeholder="Code">
-                        </div>
-
-                        <div class="checkbox">
-                            <label>
-                                <input id="linenos" type="checkbox"> Check me out
-                            </label>
                         </div>
 
                         <div class="form-group">
@@ -46,7 +42,6 @@
                             <button id="add" type="submit" class="btn btn-default">Submit</button>
                         </div>
                     </form>
-
                     <ul id="snippet-list"></ul>
                 </section>
                 <footer id="snippet-stats"></footer>

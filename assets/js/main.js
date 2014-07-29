@@ -30,7 +30,7 @@ require.config({
     }
 });
 
-require(['backbone','views/app'], function(Backbone, AppView){
+require(['backbone','views/app', 'routers/router'], function(Backbone, AppView, Workspace){
 
     // TODO Not working...
     _.templateSettings = {
@@ -59,6 +59,11 @@ require(['backbone','views/app'], function(Backbone, AppView){
     var csrftoken = $.cookie('csrftoken');
     // ===========
 
+    // Initialize Routing and start Backbone.history()
+    new Workspace();
+    Backbone.history.start();
+
+    // Initialize the App
     new AppView();
 
 });

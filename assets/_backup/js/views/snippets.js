@@ -37,8 +37,6 @@ app.SnippetsView = Backbone.View.extend({
 
     },
 
-
-
     // Functions
     addSnippet: function( e ) {
 
@@ -60,8 +58,6 @@ app.SnippetsView = Backbone.View.extend({
         this.collection.create( formData ); // to get the snippets persisted in db
 
     },
-
-
 
     // render snippets by render each snippet in its collection
     render: function(){
