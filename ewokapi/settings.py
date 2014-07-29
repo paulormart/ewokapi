@@ -82,7 +82,7 @@ USE_TZ = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 3
+    'PAGINATE_BY': 10
 }
 
 # ============

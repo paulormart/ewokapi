@@ -9,16 +9,15 @@ define([
 
         var Snippet = Backbone.Model.extend({
 
-            /*defaults:{
+            defaults:{
                 owner:  'dev',
-                title:  'First snippet',
+                title:  '',
                 code:   '<\\>',
-                linenos: true,
-                language:   'English',
-                highlight:    '1',
-                style:  'normal'
+                linenos: false,
+                language:   'python',
+                style:  'manni'
             },
-            */
+
             initialize: function(){},
 
             parse: function( response ) {

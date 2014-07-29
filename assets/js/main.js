@@ -18,15 +18,13 @@ require.config({
         }
     },
 
-    baseUrl:'static/js',
-
     paths:{
-        jquery: 'lib/jquery/jquery',
-        $cookie: 'lib/jquery/jquery.cookie',
-        bootstrap: 'lib/bootstrap/js/bootstrap.js',
-        underscore: 'lib/underscore/underscore',
-        backbone: 'lib/backbone/backbone',
-        text: 'lib/require/text'
+        jquery: '../lib/jquery/jquery',
+        $cookie: '../lib/jquery/jquery.cookie',
+        bootstrap: '../lib/bootstrap/js/bootstrap.js',
+        underscore: '../lib/underscore/underscore',
+        backbone: '../lib/backbone/backbone',
+        text: '../lib/require/text'
     }
 });
 

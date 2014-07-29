@@ -25,7 +25,7 @@ define([
             // Server response
             parse: function(response) {
 
-                // Paginator
+                // TODO Paginator
                 this.totalRecords = response.count;
                 this.nextPage = response.next;
                 this.previousPage = response.previous;
